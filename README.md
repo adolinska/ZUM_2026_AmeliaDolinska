@@ -179,7 +179,7 @@ print("Path to dataset files:", path)
 
 | Data | Zadanie | Co zmieniono i dlaczego |
 |---|---|---|
-| 17.10.2026 | Zadanie 1 | Dodanie pliku oraz aktualizacja README.md |
+| 17.10.2026 | Zadanie 1 | Dodanie plików do Zadanie 1 oraz aktualizacja README.md |
 
 ## Licencja projektu
 
