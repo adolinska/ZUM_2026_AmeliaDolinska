@@ -98,32 +98,38 @@ Uzupełniaj sekcje w zadaniach podanych w nawiasach. Zastępuj teksty w nawiasac
 
 ## Informacje ogólne
 
-* Tytuł: [tytuł projektu]
-* Autor: [imię i nazwisko]
-* Modalność: [tekst, obraz, audio albo dane multimodalne]
-* Problem klasyfikacji: [co jest klasą, ile jest klas]
+* Tytuł: Klasyfikacja egipskich hieroglifów przy użyciu konwolucyjnych sieci neuronowych
+* Autor: Amelia Dolińska
+* Modalność: Obraz
+* Problem klasyfikacji: 95 klas znaków hieroglificznych. Klasami są nazwy opisowe egipskich hieroglifów.
 
 ## Problem i pytanie eksperymentalne (Zadanie 1)
 
-[Jaki problem rozwiązujesz i co dokładnie chcesz sprawdzić.]
+Celem eksperymentu jest zbadanie, jak zastosowanie fine-tuningu modelu pretrained wpływa na skuteczność wieloklasowej klasyfikacji egipskich hieroglifów. Porównane zostaną trzy podejścia: model pretrained z zamrożonym ekstraktorem cech, ten sam model poddany fine-tuningowi oraz prosta sieć CNN trenowana od podstaw. Pozwoli to ocenić, czy dostosowanie wstępnie wytrenowanych wag do badanego zbioru poprawia wyniki względem wykorzystania zamrożonych cech i uczenia od podstaw.
 
 ## Dane i licencja (Zadanie 1)
 
-[Źródło i link, licencja, sposób pobrania, liczba przykładów, lista klas, sposób oznaczenia etykiet, znane ograniczenia.]
+* **Źródło danych:** https://www.kaggle.com/datasets/alexandrepetit881234/egyptian-hieroglyphs/data
+* **Licencja danych:** CC BY 4.0 (Attribution 4.0 International), zgodnie z informacją na Kaggle. Pierwotny zbiór został opublikowany w Roboflow Universe przez niezindetyfikowango użytkownika.
+* **Sposób pobierania:** Za pomocą biblioteki `kagglehub`, zostało to opisane w notebooku Zadania 1.
+* **Liczba przykładów:** 3890
+* **Liczba klas:** '100', 'Among', 'Angry', 'Ankh', 'Aroura', 'At', 'Bad_Thinking', 'Bandage', 'Bee', 'Belongs', 'Birth', 'Board_Game', 'Book', 'Boy', 'Branch', 'Bread', 'Brewer', 'Builder', 'Bury', 'Canal', 'Cloth_on_Pole', 'Cobra', 'Composite_Bow', 'Cooked', 'Corpse', 'Dessert', 'Divide', 'Duck', 'Elephant', 'Enclosed_Mound', 'Eye', 'Fabric', 'Face', 'Falcon', 'Fingre', 'Fish', 'Flail', 'Folded_Cloth', 'Foot', 'Galena', 'Giraffe', 'He', 'Her', 'Hit', 'Horn', 'King', 'Leg', 'Length_Of_a_Human_Arm', 'Life_Spirit', 'Limit', 'Lion', 'Lizard', 'Loaf', 'Loaf_Of_Bread', 'Man', 'Mascot', 'Meet', 'Mother', 'Mouth', 'Musical_Instrument', 'Nile_Fish', 'Not', 'Now', 'Nurse', 'Nursing', 'Occur', 'One', 'Owl', 'Pair', 'Papyrus_Scroll', 'Pool', 'QuailChick', 'Reed', 'Ring', 'Rope', 'Ruler', 'Sail', 'Sandal', 'Semen', 'Small_Ring', 'Snake', 'Soldier', 'Star', 'Stick', 'Swallow', 'This', 'To_Be_Dead', 'To_Protect', 'To_Say', 'Turtle', 'Viper', 'Wall', 'Water', 'Woman', 'You'.
+* **Potencjalne źródła wycieku danych:** Występowanie identycznych w różnych podzbiorach. Przeprowadzono kontrolę nazw plików oraz hashy, nie wykrywając duplikatów identycznych bajt po bajcie ani powtarzających się nazw. Kontrola ta nie wyklucza jednak występowania obrazów wizualnie podobnych.
+* **Znane Ograniczenia:** Brak klasy 'Mascot' w zbiorze testowym przygotowanym przez autora danych, co uniemożliwia ocenę skuteczności modelu dla tej klasy na podstawie tego podzbioru.
 
 ## Protokół (Zadanie 1)
 
-* Jednostka generalizacji: [na przykład recenzja, pacjent, mówca, nagranie źródłowe]
-* Podział: [metoda i uzasadnienie]
-* Metryka główna i pomocnicze: [z uzasadnieniem]
-* Seed: [wartość]
-* Final test: zamrożony w commicie z tagiem `task-1`, identyfikatory w `splits/`. Jeśli podział był później poprawiany, podaj commit poprawionej wersji i opisz zmianę w dzienniku zmian.
+* **Jednostka generalizacji:** Obrazy symboli
+* **Podział:** Zastsowano podział przygotwany wcześniej przez autora danych, w którym proporcje podziału wynoszą 70/20/10. Dystrybucja klas pomiędzy podzbiorami została opisane w notebooku Zadania 1. Podczas przeprowadzonego audytu danych nie zostały wykryte istotne nieprawidłowości w istniejącym podziale danych. Jedyne ograniczenie zostało opisane w sekcji wyżej.
+* **Metryka główna i pomocnicze:** Metryka głównąbędzie macro F1-score, ponieważ klasy mają różną liczebność w poszczególnych podzbiorach, a uśrednianie makro nadaje każdej klasie jednakową wagę. F1-score uwzględnia zarówno precision, jak i recall, zapewniając zrównoważoną ocenę skuteczności klasyfikacji różnych hieroglifów, zamiast skupiać się wyłącznie na odsetku poprawnych predykcji. Metryki pomocnicze: accuracy, macro precision i macro recall, które uzupełnią ocenę modelu o ogólną skuteczność klasyfikacji oraz szczegółowe informacje o poprawności i kompletności rozpoznawania klas.
+* **Seed:** 42. Zostanie wykorzystany do kontrolowania losowości, w tym inicjalizacji wag oraz kolejności próbek podczas treningu.
+* **Final test:** zamrożony w commicie z tagiem `task-1`, identyfikatory w `splits/`. Jeśli podział był później poprawiany, podaj commit poprawionej wersji i opisz zmianę w dzienniku zmian.
 
 | Zbiór | Liczba przykładów | Liczba niezależnych jednostek |
 |---|---|---|
-| train | | |
-| validation | | |
-| final test | | |
+| train |2723|95|
+| validation |778|95|
+| final test |389|94|
 
 ## Wyniki (Zadania 2 do 5)
 
@@ -148,18 +154,33 @@ Pełny zapis jest w `final_system.md`. [Krótkie uzasadnienie wyboru na podstawi
 
 ## Reprodukcja
 
-[Wersja Pythona, instalacja środowiska, pobranie danych, kolejność uruchamiania notebooków albo skryptów, sprzęt, przybliżony czas.]
+- **Wersja Pythona:** Python 3.13.16.
+- **Instalacja środowiska:** instalacja wymaganych bibliotek na podstawie pliku `requirements.txt`.
+- **Pobranie danych:** zbiór danych jest pobierany z Kaggle za pomocą biblioteki `kagglehub`:
+
+```python
+import kagglehub
+
+path = kagglehub.dataset_download(
+    "alexandrepetit881234/egyptian-hieroglyphs"
+)
+print("Path to dataset files:", path)
+```
+
+- **Kolejność uruchamiania:** Kod do Zadania 1 znajduje się w całości w notebooku `notebooks/01_data_and_protocol.ipynb`.
+- **Sprzęt:** Google Colab (Zadanie 1 - CPU)
+- **Przybliżony czas wykonania:** Zadanie 1 - około 10 sekund, bez uwzględnienia ewentualnego czasu pobierania danych.
 
 ## Ograniczenia
 
-[Ograniczenia danych, protokołu i wyników. Czego wynik nie dowodzi.]
+* **Ograniczenia danych:** Brak klasy 'Mascot' w zbiorze testowym przygotowanym przez autora danych, co uniemożliwia ocenę skuteczności modelu dla tej klasy na podstawie tego podzbioru.
 
 ## Dziennik zmian
 
 | Data | Zadanie | Co zmieniono i dlaczego |
 |---|---|---|
-| | | |
+| 17.10.2026 | Zadanie 1 | Dodanie pliku oraz aktualizacja README.md |
 
 ## Licencja projektu
 
-[Na przykład MIT. Dane używane zgodnie z licencją opisaną w sekcji „Dane i licencja”.]
+Kod źródłowy projektu jest udostępniony na licencji MIT. Zbiór danych wykorzystywany jest zgodnie z warunkami licencji CC BY 4.0 wskazanej na stronie Kaggle.
