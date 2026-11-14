@@ -115,12 +115,16 @@ Celem eksperymentu jest zbadanie, jak zastosowanie fine-tuningu modelu pretraine
 * **Liczba przykładów:** 3890
 * **Liczba klas:** '100', 'Among', 'Angry', 'Ankh', 'Aroura', 'At', 'Bad_Thinking', 'Bandage', 'Bee', 'Belongs', 'Birth', 'Board_Game', 'Book', 'Boy', 'Branch', 'Bread', 'Brewer', 'Builder', 'Bury', 'Canal', 'Cloth_on_Pole', 'Cobra', 'Composite_Bow', 'Cooked', 'Corpse', 'Dessert', 'Divide', 'Duck', 'Elephant', 'Enclosed_Mound', 'Eye', 'Fabric', 'Face', 'Falcon', 'Fingre', 'Fish', 'Flail', 'Folded_Cloth', 'Foot', 'Galena', 'Giraffe', 'He', 'Her', 'Hit', 'Horn', 'King', 'Leg', 'Length_Of_a_Human_Arm', 'Life_Spirit', 'Limit', 'Lion', 'Lizard', 'Loaf', 'Loaf_Of_Bread', 'Man', 'Mascot', 'Meet', 'Mother', 'Mouth', 'Musical_Instrument', 'Nile_Fish', 'Not', 'Now', 'Nurse', 'Nursing', 'Occur', 'One', 'Owl', 'Pair', 'Papyrus_Scroll', 'Pool', 'QuailChick', 'Reed', 'Ring', 'Rope', 'Ruler', 'Sail', 'Sandal', 'Semen', 'Small_Ring', 'Snake', 'Soldier', 'Star', 'Stick', 'Swallow', 'This', 'To_Be_Dead', 'To_Protect', 'To_Say', 'Turtle', 'Viper', 'Wall', 'Water', 'Woman', 'You'.
 * **Potencjalne źródła wycieku danych:** Występowanie identycznych w różnych podzbiorach. Przeprowadzono kontrolę nazw plików oraz hashy, nie wykrywając duplikatów identycznych bajt po bajcie ani powtarzających się nazw. Kontrola ta nie wyklucza jednak występowania obrazów wizualnie podobnych.
-* **Znane Ograniczenia:** Brak klasy 'Mascot' w zbiorze testowym przygotowanym przez autora danych, co uniemożliwia ocenę skuteczności modelu dla tej klasy na podstawie tego podzbioru.
+* **Znane Ograniczenia:** 
+- Brak klasy 'Mascot' w zbiorze testowym przygotowanym przez autora danych, co uniemożliwia ocenę skuteczności modelu dla tej klasy na podstawie tego podzbioru. 
+- Obrazy należące do tej samej klasy charakteryzują się dużym podobieństwem wizualnym, ponieważ przedstawiają ten sam bazowy hieroglif w różnych wariantach, wynikających głównie ze zmian orientacji, obrotu lub kąta przedstawienia. Zbiór danych nie zapewnia jednak szerokiej reprezentacji różnych sposobów graficznego przedstawienia tego samego hieroglifu, np. odmiennych stylów rysowania. Oznacza to, że różnorodność wizualna przykładów w obrębie klas jest ograniczona.
+
 
 ## Protokół (Zadanie 1)
 
-* **Jednostka generalizacji:** Obrazy symboli
-* **Podział:** Zastsowano podział przygotwany wcześniej przez autora danych, w którym proporcje podziału wynoszą 70/20/10. Dystrybucja klas pomiędzy podzbiorami została opisane w notebooku Zadania 1. Podczas przeprowadzonego audytu danych nie zostały wykryte istotne nieprawidłowości w istniejącym podziale danych. Jedyne ograniczenie zostało opisane w sekcji wyżej.
+* **Jednostka generalizacji:** Bazowy typ hieroglifu (klasa)
+* **Podział:** Zastsowano podział przygotwany wcześniej przez autora danych, w którym proporcje podziału wynoszą 70/20/10. Dystrybucja klas pomiędzy podzbiorami została opisane w notebooku Zadania 1. Podczas przeprowadzonego audytu danych nie zostały wykryte istotne nieprawidłowości w istniejącym podziale danych. Ograniczenia zostały opisane w sekcji wyżej.
+* **Założenia dotyczące generalizacji i podobieństwa obrazów:** Ze względu na specyfikę i ograniczoną różnorodność zbioru danych przyjęto, że eksperyment ocenia zdolność modelu do rozpoznawania znanych typów hieroglifów w wariantach wizualnych reprezentowanych w zbiorze. Nie zakłada się natomiast generalizacji na inne, niezależnie narysowane reprezentacje tych samych hieroglifów, które nie występują w danych treningowych. W konsekwencji uzyskane wyniki należy interpretować jako miarę skuteczności rozpoznawania znaków w ramach przyjętej reprezentacji zbioru, a nie jako dowód uniwersalnej zdolności rozpoznawania hieroglifów niezależnie od sposobu ich przedstawienia.
 * **Metryka główna i pomocnicze:** Metryka głównąbędzie macro F1-score, ponieważ klasy mają różną liczebność w poszczególnych podzbiorach, a uśrednianie makro nadaje każdej klasie jednakową wagę. F1-score uwzględnia zarówno precision, jak i recall, zapewniając zrównoważoną ocenę skuteczności klasyfikacji różnych hieroglifów, zamiast skupiać się wyłącznie na odsetku poprawnych predykcji. Metryki pomocnicze: accuracy, macro precision i macro recall, które uzupełnią ocenę modelu o ogólną skuteczność klasyfikacji oraz szczegółowe informacje o poprawności i kompletności rozpoznawania klas.
 * **Seed:** 42. Zostanie wykorzystany do kontrolowania losowości, w tym inicjalizacji wag oraz kolejności próbek podczas treningu.
 * **Final test:** zamrożony w commicie z tagiem `task-1`, identyfikatory w `splits/`. Jeśli podział był później poprawiany, podaj commit poprawionej wersji i opisz zmianę w dzienniku zmian.
@@ -131,14 +135,16 @@ Celem eksperymentu jest zbadanie, jak zastosowanie fine-tuningu modelu pretraine
 | validation |778|95|
 | final test |389|94|
 
+**Uwaga dotycząca niezależnych jednostek:** Liczba niezależnych jednostek generalizacji odpowiada liczbie klas, tj. 95 dla zbiorów train i validation oraz 94 dla zbioru testowego. Wynika to ze specyfiki zbioru danych: obrazy należące do danej klasy przedstawiają ten sam bazowy hieroglif, poddany różnym transformacjom, takim jak obrót, zmiana kąta lub orientacji. W konsekwencji wiele obrazów w obrębie jednej klasy nie reprezentuje niezależnych obiektów, lecz różne warianty wizualne tego samego znaku.
+
 ## Wyniki (Zadania 2 do 5)
 
 Wyniki na validation:
 
 | Podejście | Zadanie | Metryka główna | Metryki pomocnicze | Czas i sprzęt | Uwagi |
 |---|---|---|---|---|---|
-| Trivial baseline | 2 | | | | |
-| Baseline | 2 | | | | |
+| Trivial baseline | 2 | Macro F1-score:  0.0001 | Accuracy: 0.0051, Macro precision: 0.0001, Macro recall: 0.0105 | Czas: 0.011612 s, Sprzęt: CPU | Brak uwag |
+| Baseline | 2 | Macro F1-score: 0.8946 | Accuracy: 0.8946, Macro precision: 0.9115, Macro recall: 0.9000 | Czas treningu z walidacją: 405.28 s, Sprzęt: CPU | Uzasadnienie preprocessingu oraz modelu znajduje się w `notebooks/02_baseline.ipynb` |
 | Podejście pretrained | 3 | | | | |
 | Rozszerzenie | 4 | | | | |
 
@@ -154,7 +160,7 @@ Pełny zapis jest w `final_system.md`. [Krótkie uzasadnienie wyboru na podstawi
 
 ## Reprodukcja
 
-- **Wersja Pythona:** Python 3.13.16.
+- **Wersja Pythona:** Python 3.13.18.
 - **Instalacja środowiska:** instalacja wymaganych bibliotek na podstawie pliku `requirements.txt`.
 - **Pobranie danych:** zbiór danych jest pobierany z Kaggle za pomocą biblioteki `kagglehub`:
 
@@ -167,19 +173,21 @@ path = kagglehub.dataset_download(
 print("Path to dataset files:", path)
 ```
 
-- **Kolejność uruchamiania:** Kod do Zadania 1 znajduje się w całości w notebooku `notebooks/01_data_and_protocol.ipynb`.
-- **Sprzęt:** Google Colab (Zadanie 1 - CPU)
-- **Przybliżony czas wykonania:** Zadanie 1 - około 10 sekund, bez uwzględnienia ewentualnego czasu pobierania danych.
+- **Kolejność uruchamiania:** Kod do Zadania 1: `notebooks/01_data_and_protocol.ipynb`. Kod do Zadania 2: `notebooks/02_baseline.ipynb`.
+- **Sprzęt:** Google Colab (Zadanie 1,2 - CPU)
+- **Przybliżony czas wykonania:** Zadanie 1 - około 10 sekund. Zadanie 2 - około 8 minut. Czas wykonania nie uwzględnienia ewentualnego czasu pobierania danych.
 
 ## Ograniczenia
 
-* **Ograniczenia danych:** Brak klasy 'Mascot' w zbiorze testowym przygotowanym przez autora danych, co uniemożliwia ocenę skuteczności modelu dla tej klasy na podstawie tego podzbioru.
+* **Ograniczenia danych:** Obrazy w obrębie klas są do siebie podobne i przedstawiają te same hieroglify poddane różnym tranformacjom wizualnym. Zbiór nie uwzględnia jednak różnorodności stylów graficznego przedstawienia hieroglifów. Brak klasy 'Mascot' w zbiorze testowym przygotowanym przez autora danych, co uniemożliwia ocenę skuteczności modelu dla tej klasy na podstawie tego podzbioru.
 
 ## Dziennik zmian
 
 | Data | Zadanie | Co zmieniono i dlaczego |
 |---|---|---|
-| 17.10.2026 | Zadanie 1 | Dodanie plików do Zadanie 1 oraz aktualizacja README.md |
+| 17.10.2026 | Zadanie 1 | Dodanie plików do Zadania 1 oraz aktualizacja README.md |
+| 14.11.2026 | Zadanie 1 | Doprecyzowanie protokołu oraz założeń do Zadania 1 w README.md |
+| 14.11.2026 | Zadanie 2 | Dodanie plików do Zadania 2, wyników modelu na validation, uzupełnienie dziennika eksperymentów oraz aktualizacja README.md |
 
 ## Licencja projektu
 
