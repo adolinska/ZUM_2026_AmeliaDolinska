@@ -31,7 +31,7 @@ Skopiuj ten plik do `results/experiment_log.md`. Dopisuj jeden wpis na każdy ek
 - Wynik na validation (metryka główna i pomocnicze): Macro F1-score: 0.8946, Accuracy: 0.8946, Macro precision: 0.9115, Macro recall: 0.9000
 - Koszt (czas, sprzęt, pamięć): Trening na CPU; Czas treningu z walidacją: 405.28 s
 - Pliki z wynikami w `results/`: 
-    - validation/cnn_baseline_classification_report.csv - szczegółowy raport metryk dla poszczególnych klas
-    - validation/cnn_baseline_metrics.csv - metryki na validation
-    - validation/cnn_baseline_predictions.csv - prawdziwa oraz przewidziana klasa
+    - `validation/cnn_baseline_classification_report.csv` - szczegółowy raport metryk dla poszczególnych klas
+    - `validation/cnn_baseline_metrics.csv` - metryki na validation
+    - `validation/cnn_baseline_predictions.csv` - prawdziwa oraz przewidziana klasa
 - Wnioski: Uzyskane wyniki wskazują, że model CNN osiąga dobre rezultaty w klasyfikacji hieroglifów na zbiorze walidacyjnym. Wysoka wartość Macro F1-score oraz zbliżone wartości Macro Precision i Macro Recall świadczą o dobrym balansie między poprawnością predykcji a rozpoznawaniem poszczególnych klas. Model poprawnie klasyfikuje większość hieroglifów, jednak nadal występują pomyłki między wizualnie podobnymi klasami, m.in. Boy i Man, Mascot i Divide oraz Fish i Nile_Fish. Jednym z możliwych ograniczeń jest niewielka rozdzielczość obrazów oraz stosunkowo prosta architektura, które mogą utrudniać rozpoznawanie drobnych szczegółów. Podsumowując, model stanowi dobrą konfigurację bazową do dalszych eksperymentów. W kolejnej części projektu zastosowany zostanie transfer learning, aby sprawdzić, czy bardziej zaawansowana architektura i wcześniej wyuczone reprezentacje pozwolą poprawić skuteczność klasyfikacji.
